@@ -44,6 +44,7 @@ h2.db*
 .allure/*
 allure-results/*
 
-mysql_data/*
+mysql_data
 
 
+/mysql-data/

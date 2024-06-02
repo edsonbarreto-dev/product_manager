@@ -6,6 +6,7 @@ import br.com.fiap.microservice.product_manager.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -33,5 +34,19 @@ public class ProductService {
         productFound.setQuantityStock(product.getQuantityStock());
         productFound.setPrice(product.getPrice());
         return productRepository.save(productFound);
+    }
+
+    public Product updatePriceProduct(Long productId, BigDecimal price) {
+        Product product = this.findProductById(productId);
+        product.setPrice(price);
+        this.updateProduct(product);
+        return product;
+    }
+
+    public Product updateStockProduct(Long productId, int quantityStock) {
+        Product product = this.findProductById(productId);
+        product.setQuantityStock(quantityStock);
+        this.updateProduct(product);
+        return product;
     }
 }

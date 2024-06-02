@@ -35,4 +35,18 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(product));
     }
+
+    @PatchMapping("update/price")
+    public ResponseEntity<Product> updatePriceOnlyProduct(@RequestBody Product product) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            productService.updatePriceProduct(product.getProductId(), product.getPrice())
+        );
+    }
+
+    @PatchMapping("update/stock")
+    public ResponseEntity<Product> updateStockOnlyProduct(@RequestBody Product product) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            productService.updateStockProduct(product.getProductId(), product.getQuantityStock())
+        );
+    }
 }
