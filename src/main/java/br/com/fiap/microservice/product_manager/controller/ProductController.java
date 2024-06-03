@@ -1,5 +1,10 @@
 package br.com.fiap.microservice.product_manager.controller;
 
+import br.com.fiap.microservice.product_manager.ResponseAddAll;
+import br.com.fiap.microservice.product_manager.ResponseResult;
+import br.com.fiap.microservice.product_manager.dto.AddProduct;
+import br.com.fiap.microservice.product_manager.dto.ReserveProductStock;
+import br.com.fiap.microservice.product_manager.dto.UpdateProductPrice;
 import br.com.fiap.microservice.product_manager.model.Product;
 import br.com.fiap.microservice.product_manager.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +26,21 @@ public class ProductController {
         return productService.listAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> findProductById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findProductById(id));
+    @PostMapping
+    public ResponseEntity<ResponseResult<?>> addProduct(@RequestBody AddProduct product) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(product));
     }
 
-    @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(product));
+    @PostMapping("add/all")
+    public ResponseEntity<ResponseAddAll> addAllProduct(@RequestBody List<AddProduct> list) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addAllProduct(list));
+    }
+
+    @PostMapping("reserve")
+    public ResponseEntity<ResponseResult<Boolean>> reserveProduct(@RequestBody ReserveProductStock reserveRequired) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.reserveProduct(
+            reserveRequired.getProductId(), reserveRequired.getQuantityRequired()
+        ));
     }
 
     @PutMapping
@@ -37,16 +49,9 @@ public class ProductController {
     }
 
     @PatchMapping("update/price")
-    public ResponseEntity<Product> updatePriceOnlyProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> updatePriceOnlyProduct(@RequestBody UpdateProductPrice data) {
         return ResponseEntity.status(HttpStatus.OK).body(
-            productService.updatePriceProduct(product.getProductId(), product.getPrice())
-        );
-    }
-
-    @PatchMapping("update/stock")
-    public ResponseEntity<Product> updateStockOnlyProduct(@RequestBody Product product) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-            productService.updateStockProduct(product.getProductId(), product.getQuantityStock())
+            productService.updatePriceProduct(data.getProductId(), data.getPrice())
         );
     }
 }
