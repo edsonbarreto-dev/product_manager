@@ -19,7 +19,7 @@ services:
     env_file: ./env/.env
     restart: no
     ports:
-      - 8280:8080
+      - 8082:8080
     depends_on:
       database:
         condition: service_healthy
