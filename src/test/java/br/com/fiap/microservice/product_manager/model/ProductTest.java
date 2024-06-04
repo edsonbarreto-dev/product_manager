@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.*;
 
 class ProductTest {
@@ -35,14 +36,7 @@ class ProductTest {
     void devePermitirListarProdutos() {
         // Arrange
         var list = new ArrayList<Product>();
-        var product = Product
-                .builder()
-                .productId(1L)
-                .name("Product 1")
-                .price(new BigDecimal("1.00"))
-                .description("Description product 1")
-                .QuantityStock(2)
-                .build();
+        var product = novoProduto();
         list.add(product);
 
         when(productRepository.findAll()).thenReturn(list);
@@ -59,7 +53,16 @@ class ProductTest {
 
     @Test
     void devePermitirIncluirUmProduto() {
-        fail("Not yet implemented");
+        // Arrange
+        var product = novoProduto();
+        when(productRepository.save(product)).thenReturn(product);
+
+        // Action
+        var productResult = productRepository.save(product);
+
+        // Assert
+        Assertions.assertThat(productResult).isNotNull();
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 
     @Test
@@ -80,6 +83,18 @@ class ProductTest {
     @Test
     void devePermitirAtualizarOPrecoDoProduto() {
         fail("Not yet implemented");
+    }
+
+
+    private Product novoProduto() {
+        return Product
+                .builder()
+                .productId(1L)
+                .name("Product 1")
+                .price(new BigDecimal("1.00"))
+                .description("Description product 1")
+                .QuantityStock(2)
+                .build();
     }
 
 }
