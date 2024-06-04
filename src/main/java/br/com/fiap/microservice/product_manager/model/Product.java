@@ -5,13 +5,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
 
-@Data
 @Entity
+@Data
+@Builder(toBuilder = true)
+@Jacksonized
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -24,3 +28,4 @@ public class Product {
     private int QuantityStock;
     private BigDecimal price;
 }
+
