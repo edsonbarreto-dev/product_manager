@@ -34,12 +34,6 @@ class AddProductTest {
     "Teste", "Add Teste", 100, new BigDecimal("150.00")
         );
 
-        // Action
-        addProduct.setName("Teste");
-        addProduct.setPrice(new BigDecimal("150.00"));
-        addProduct.setDescription("Add Teste");
-        addProduct.setQuantityStock(100);
-
         // Assert
         Assertions.assertThat(addProduct).isNotNull();
         Assertions.assertThat(addProduct.getName()).isEqualTo("Teste");
