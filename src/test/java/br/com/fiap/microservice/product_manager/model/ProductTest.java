@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 class ProductTest {
@@ -48,6 +47,9 @@ class ProductTest {
        // Assert
         Assertions.assertThat(product).isNotNull();
         Assertions.assertThat(products).hasSize(1);
+        Assertions.assertThat(products.get(0).getName()).isEqualTo(product.getName());
+        Assertions.assertThat(products.get(0).getDescription()).isEqualTo(product.getDescription());
+        Assertions.assertThat(products.get(0).getPrice()).isEqualTo(product.getPrice());
         verify(productRepository, times(1)).findAll();
 
     }
@@ -55,7 +57,7 @@ class ProductTest {
     @Test
     void devePermitirIncluirUmProduto() {
         // Arrange
-        var product = productSaved();
+        var product = new Product();
         when(productRepository.save(product)).thenReturn(product);
 
         // Action
@@ -86,22 +88,6 @@ class ProductTest {
         verify(productRepository, times(1)).save(any(Product.class));
     }
 
-    @Test
-    void devePermitirReservarUmProdutoRetirandoEleDoEstoque() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    void devePermitirIncluirVariosProdutosDeUmaLista() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    void devePermitirAtualizarOPrecoDoProduto() {
-        fail("Not yet implemented");
-    }
-
-
     private Product productSaved() {
         return Product
                 .builder()
@@ -110,27 +96,6 @@ class ProductTest {
                 .price(new BigDecimal("1.00"))
                 .description("Description product 1")
                 .QuantityStock(2)
-                .build();
-    }
-
-    private AddProduct productForAdd() {
-        return AddProduct
-                .builder()
-                .name("Product 1")
-                .price(new BigDecimal("1.00"))
-                .description("Description product 1")
-                .QuantityStock(2)
-                .build();
-    }
-
-    private Product productUpdated() {
-        return Product
-                .builder()
-                .productId(1L)
-                .name("Product 1")
-                .price(new BigDecimal("1.00"))
-                .description("Description product 1")
-                .QuantityStock(100)
                 .build();
     }
 
