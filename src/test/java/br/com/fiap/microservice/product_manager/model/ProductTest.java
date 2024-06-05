@@ -1,5 +1,6 @@
 package br.com.fiap.microservice.product_manager.model;
 
+import br.com.fiap.microservice.product_manager.dto.AddProduct;
 import br.com.fiap.microservice.product_manager.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -10,9 +11,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.fail;
-import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.*;
 
 class ProductTest {
@@ -36,7 +37,7 @@ class ProductTest {
     void devePermitirListarProdutos() {
         // Arrange
         var list = new ArrayList<Product>();
-        var product = novoProduto();
+        var product = productSaved();
         list.add(product);
 
         when(productRepository.findAll()).thenReturn(list);
@@ -54,7 +55,7 @@ class ProductTest {
     @Test
     void devePermitirIncluirUmProduto() {
         // Arrange
-        var product = novoProduto();
+        var product = productSaved();
         when(productRepository.save(product)).thenReturn(product);
 
         // Action
@@ -67,7 +68,22 @@ class ProductTest {
 
     @Test
     void devePermitirAlterarUmProduto() {
-        fail("Not yet implemented");
+        // Arrange
+        var product = productSaved();
+        when(productRepository.findById(product.getProductId())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+
+        // Action
+        product = productRepository.findById(product.getProductId()).orElseThrow();
+        product.setQuantityStock(200);
+        product = productRepository.save(product);
+
+        // Assert
+        Assertions.assertThat(product).isNotNull();
+        Assertions.assertThat(product.getQuantityStock() == 200).isTrue();
+
+        verify(productRepository, times(1)).findById(1L);
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 
     @Test
@@ -86,7 +102,7 @@ class ProductTest {
     }
 
 
-    private Product novoProduto() {
+    private Product productSaved() {
         return Product
                 .builder()
                 .productId(1L)
@@ -94,6 +110,27 @@ class ProductTest {
                 .price(new BigDecimal("1.00"))
                 .description("Description product 1")
                 .QuantityStock(2)
+                .build();
+    }
+
+    private AddProduct productForAdd() {
+        return AddProduct
+                .builder()
+                .name("Product 1")
+                .price(new BigDecimal("1.00"))
+                .description("Description product 1")
+                .QuantityStock(2)
+                .build();
+    }
+
+    private Product productUpdated() {
+        return Product
+                .builder()
+                .productId(1L)
+                .name("Product 1")
+                .price(new BigDecimal("1.00"))
+                .description("Description product 1")
+                .QuantityStock(100)
                 .build();
     }
 
