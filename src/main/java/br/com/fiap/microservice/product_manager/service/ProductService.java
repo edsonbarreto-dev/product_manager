@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -29,8 +27,7 @@ public class ProductService {
 
     public ResponseResult<?> addProduct(AddProduct addProduct) {
         try {
-            Optional<Product> productFound = productRepository.findByName(addProduct.getName());
-            if (productFound.isPresent()) { throw new ProductFound(); }
+            productRepository.findByName(addProduct.getName()).orElseThrow(ProductFound::new);
             Product product = new Product(
                 null,
                 addProduct.getName(),
@@ -39,8 +36,8 @@ public class ProductService {
                 addProduct.getPrice()
             );
             return new ResponseResult<>(productRepository.save(product), "Added successfully!");
-        } catch (RuntimeException e) {
-            return new ResponseResult<>(addProduct, "Has exist on repository one product with this data!");
+        } catch (ProductFound e) {
+            return new ResponseResult<>(addProduct, e.getMessage());
         }
     }
 
