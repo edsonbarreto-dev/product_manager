@@ -100,7 +100,7 @@ public class ProductService {
             }
 
             product.setQuantityStock(product.getQuantityStock() + data.getAdditionalStock());
-            this.updateProduct(product);
+            productRepository.save(product);
             return new ResponseResult<>(product, "Updated product successfully!");
         } catch (RuntimeException e) {
             return new ResponseResult<>(null, e.getMessage());
