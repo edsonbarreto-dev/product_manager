@@ -5,6 +5,7 @@ import br.com.fiap.microservice.product_manager.ResponseResult;
 import br.com.fiap.microservice.product_manager.dto.AddProduct;
 import br.com.fiap.microservice.product_manager.dto.ReserveProductStock;
 import br.com.fiap.microservice.product_manager.dto.UpdateProductPrice;
+import br.com.fiap.microservice.product_manager.dto.UpdateProductStock;
 import br.com.fiap.microservice.product_manager.model.Product;
 import br.com.fiap.microservice.product_manager.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,11 @@ public class ProductController {
     @GetMapping
     public List<Product> listAllProducts() {
         return productService.listAll();
+    }
+
+    @GetMapping("{id}/price")
+    public ResponseEntity<BigDecimal> getPrice(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getPrice(id));
     }
 
     @PostMapping
@@ -53,5 +60,10 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(
             productService.updatePriceProduct(data.getProductId(), data.getPrice())
         );
+    }
+
+    @PatchMapping("update/stock")
+    public ResponseEntity<ResponseResult<Product>> incrementStockProduct(@RequestBody UpdateProductStock data) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.incrementStockProduct(data));
     }
 }
